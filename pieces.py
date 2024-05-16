@@ -16,9 +16,6 @@ class Piece():
         self.board = board
 
 class Pawn(Piece):
-    def __init__(self, coordinates, color, board):
-        super().__init__(coordinates, color, board)
-
     def show_moves(self):
         moves = []
         increment = 1 if self.color == 'black' else -1
