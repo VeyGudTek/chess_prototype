@@ -1,0 +1,48 @@
+from pieces import Pawn, Square
+
+class Game():
+    def __init__(self):
+        self.board = self.create_board()
+
+    def print_board(self):
+        for i in range(len(self.board)):
+            for j in range(len(self.board)):
+                self.board[i][j].print_square()
+            print()
+
+    def create_board(self):
+        new_board = [[Square('■') if (i + j) % 2 == 0 else Square('□')  for j in range(8)] for i in range(8)]
+
+        #Pawns
+        for i in range(8):
+            new_board[1][i].piece = Pawn([1, i], 'black', new_board)
+            new_board[6][i].piece = Pawn([6, i], 'white', new_board)
+
+        return new_board
+
+    def move_piece(self, old_coord, new_coord):
+        selected_piece = self.board[old_coord[0]][old_coord[1]].piece
+
+        if not selected_piece:
+            print("No piece present.")
+            return False
+        elif new_coord in selected_piece.show_moves():
+            print("ogey")
+            self.board[old_coord[0]][old_coord[1]].piece = None
+            self.board[new_coord[0]][new_coord[1]].piece = selected_piece
+            return True
+        else:
+            print("Not a valid move.")
+            return False
+
+def test():
+    game = Game()
+    game.board[7][0].piece = Pawn([7, 0], 'black', game.board)
+    game.board[1][1].piece = Pawn([1, 1], 'white', game.board)
+
+    game.board[1][0].piece = None
+    print(game.board[7][0].piece.show_moves())
+
+    game.print_board()
+
+test()
