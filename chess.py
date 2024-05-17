@@ -1,4 +1,4 @@
-from pieces import Pawn, Knight, Bishop, Rook, Square
+from pieces import Pawn, Knight, Bishop, Rook, King, Queen, Square
 
 class Game():
     def __init__(self):
@@ -43,10 +43,12 @@ def test():
     game.board[3][4].piece = Knight([3, 4], 'black', game.board)
     game.board[4][3].piece = Bishop([4, 3], 'white', game.board)
     game.board[5][4].piece = Rook([5, 4], 'white', game.board)
+    game.board[3][3].piece = King([3, 3], 'white', game.board)
+    game.board[3][6].piece = Queen([3, 6], 'white', game.board)
 
     game.board[1][0].piece = None
     game.board[1][3].piece = None
-    print(game.board[5][4].piece.show_moves())
+    print(game.board[3][6].piece.show_moves())
     #game.move_piece([3, 4], [5, 5])
 
     game.print_board()

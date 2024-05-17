@@ -94,6 +94,15 @@ class King(Piece):
     def show_moves(self):
         moves = []
 
+        self.add_direction(moves, 0, 1)
+        self.add_direction(moves, 1, 0)
+        self.add_direction(moves, 0, -1)
+        self.add_direction(moves, -1, 0)
+        self.add_direction(moves, 1, 1)
+        self.add_direction(moves, -1, 1)
+        self.add_direction(moves, -1, -1)
+        self.add_direction(moves, 1, -1)
+
         return moves
 
     def print_piece(self):
@@ -142,6 +151,15 @@ class Rook(Piece):
 class Queen(Bishop, Rook):
     def show_moves(self):
         moves = []
+
+        self.add_direction(moves, 0, 1, True)
+        self.add_direction(moves, 1, 0, True)
+        self.add_direction(moves, 0, -1, True)
+        self.add_direction(moves, -1, 0, True)
+        self.add_direction(moves, 1, 1, True)
+        self.add_direction(moves, -1, 1, True)
+        self.add_direction(moves, -1, -1, True)
+        self.add_direction(moves, 1, -1, True)
 
         return moves
     
