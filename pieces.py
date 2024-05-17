@@ -29,9 +29,9 @@ class Pawn(Piece):
             moves.append([self.coordinates[0] + increment, self.coordinates[1]])
         
         #Check Diagonal
-        if self.board[self.coordinates[0] + increment][self.coordinates[1] + 1].piece and self.board[self.coordinates[0] + increment][self.coordinates[1] + 1].piece.color != self.color:
+        if (self.coordinates[1] + 1 <= 7) and (self.board[self.coordinates[0] + increment][self.coordinates[1] + 1].piece) and (self.board[self.coordinates[0] + increment][self.coordinates[1] + 1].piece.color != self.color):
             moves.append([self.coordinates[0] + increment, self.coordinates[1] + 1])
-        if self.board[self.coordinates[0] + increment][self.coordinates[1] - 1].piece and self.board[self.coordinates[0] + increment][self.coordinates[1] - 1].piece.color != self.color:
+        if (self.coordinates[1] - 1 >= 0) and (self.board[self.coordinates[0] + increment][self.coordinates[1] - 1].piece) and (self.board[self.coordinates[0] + increment][self.coordinates[1] - 1].piece.color != self.color):
             moves.append([self.coordinates[0] + increment, self.coordinates[1] - 1])
         
         return moves
