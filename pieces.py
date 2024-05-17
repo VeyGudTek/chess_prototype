@@ -15,6 +15,13 @@ class Piece():
         self.color = color
         self.board = board
 
+    def check_in_bounds(self, x_offset, y_offset):
+        if not ((self.coordinates[0] + y_offset <= 7) and (self.coordinates[0] + y_offset >= 0)):
+            return False
+        if not ((self.coordinates[1] + x_offset <= 7) and (self.coordinates[1] + x_offset >= 0)):
+            return False
+        return True
+
 class Pawn(Piece):
     def show_moves(self):
         moves = []
@@ -29,9 +36,9 @@ class Pawn(Piece):
             moves.append([self.coordinates[0] + increment, self.coordinates[1]])
         
         #Check Diagonal
-        if (self.coordinates[1] + 1 <= 7) and (self.board[self.coordinates[0] + increment][self.coordinates[1] + 1].piece) and (self.board[self.coordinates[0] + increment][self.coordinates[1] + 1].piece.color != self.color):
+        if (self.check_in_bounds(1, increment)) and (self.board[self.coordinates[0] + increment][self.coordinates[1] + 1].piece) and (self.board[self.coordinates[0] + increment][self.coordinates[1] + 1].piece.color != self.color):
             moves.append([self.coordinates[0] + increment, self.coordinates[1] + 1])
-        if (self.coordinates[1] - 1 >= 0) and (self.board[self.coordinates[0] + increment][self.coordinates[1] - 1].piece) and (self.board[self.coordinates[0] + increment][self.coordinates[1] - 1].piece.color != self.color):
+        if (self.check_in_bounds(-1, increment)) and (self.board[self.coordinates[0] + increment][self.coordinates[1] - 1].piece) and (self.board[self.coordinates[0] + increment][self.coordinates[1] - 1].piece.color != self.color):
             moves.append([self.coordinates[0] + increment, self.coordinates[1] - 1])
         
         return moves
@@ -69,9 +76,7 @@ class Knight(Piece):
 
     def check_valid(self, x_offset, y_offset):
         #Check in bounds
-        if not ((self.coordinates[0] + y_offset <= 7) and (self.coordinates[0] + y_offset >= 0)):
-            return False
-        if not ((self.coordinates[1] + x_offset <= 7) and (self.coordinates[1] + x_offset >= 0)):
+        if not self.check_in_bounds(x_offset, y_offset):
             return False
 
         #Check for same colored pieces
