@@ -15,6 +15,15 @@ class Piece():
         self.color = color
         self.board = board
 
+    def add_direction(self, moves, x_offset, y_offset, recursive = False):
+        #Check in bounds
+        if not self.check_in_bounds(x_offset, y_offset):
+            return
+
+        #Check for same colored pieces
+        if (not self.board[self.coordinates[0] + y_offset][self.coordinates[1] + x_offset].piece) or (self.board[self.coordinates[0] + y_offset][self.coordinates[1] + x_offset].piece.color != self.color):
+            moves.append([self.coordinates[0] + y_offset, self.coordinates[1] + x_offset])
+
     def check_in_bounds(self, x_offset, y_offset):
         if not ((self.coordinates[0] + y_offset <= 7) and (self.coordinates[0] + y_offset >= 0)):
             return False
@@ -54,38 +63,17 @@ class Knight(Piece):
     def show_moves(self):
         moves = []
 
-        #Check L movement
-        if self.check_valid(1, 2):
-            moves.append([self.coordinates[0] + 2, self.coordinates[1] + 1])
-        if self.check_valid(2, 1):
-            moves.append([self.coordinates[0] + 1, self.coordinates[1] + 2])
-        if self.check_valid(-1, 2):
-            moves.append([self.coordinates[0] + 2, self.coordinates[1] - 1])
-        if self.check_valid(-2, 1):
-            moves.append([self.coordinates[0] + 1, self.coordinates[1] - 2])
-        if self.check_valid(-1, -2):
-            moves.append([self.coordinates[0] - 2, self.coordinates[1] - 1])
-        if self.check_valid(-2, -1):
-            moves.append([self.coordinates[0] - 1, self.coordinates[1] - 2])
-        if self.check_valid(1, -2):
-            moves.append([self.coordinates[0] - 2, self.coordinates[1] + 1])
-        if self.check_valid(2, -1):
-            moves.append([self.coordinates[0] - 1, self.coordinates[1] + 2])
+        #Add L movement
+        self.add_direction(moves, 1, 2)
+        self.add_direction(moves, 2, 1)
+        self.add_direction(moves, -1, 2)
+        self.add_direction(moves, -2, 1)
+        self.add_direction(moves, -1, -2)
+        self.add_direction(moves, -2, -1)
+        self.add_direction(moves, 1, -2)
+        self.add_direction(moves, 2, -1)
 
         return moves
-
-    def check_valid(self, x_offset, y_offset):
-        #Check in bounds
-        if not self.check_in_bounds(x_offset, y_offset):
-            return False
-
-        #Check for same colored pieces
-        if not self.board[self.coordinates[0] + y_offset][self.coordinates[1] + x_offset].piece:
-            return True
-        elif self.board[self.coordinates[0] + y_offset][self.coordinates[1] + x_offset].piece.color != self.color:
-            return True
-        else:
-            return False
 
     def print_piece(self):
         if self.color == "black":
