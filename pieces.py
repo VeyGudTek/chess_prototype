@@ -15,14 +15,22 @@ class Piece():
         self.color = color
         self.board = board
 
-    def add_direction(self, moves, x_offset, y_offset, recursive = False):
+    def add_direction(self, moves, x_offset, y_offset, recursive = False, x_base = 0, y_base = 0):
         #Check in bounds
-        if not self.check_in_bounds(x_offset, y_offset):
+        if not self.check_in_bounds(x_offset + x_base, y_offset + y_base):
             return
 
         #Check for same colored pieces
-        if (not self.board[self.coordinates[0] + y_offset][self.coordinates[1] + x_offset].piece) or (self.board[self.coordinates[0] + y_offset][self.coordinates[1] + x_offset].piece.color != self.color):
-            moves.append([self.coordinates[0] + y_offset, self.coordinates[1] + x_offset])
+        if not self.board[self.coordinates[0] + y_offset + y_base][self.coordinates[1] + x_offset + x_base].piece:
+            moves.append([self.coordinates[0] + y_offset + y_base, self.coordinates[1] + x_offset + x_base])
+        elif self.board[self.coordinates[0] + y_offset + y_base][self.coordinates[1] + x_offset + x_base].piece.color != self.color:
+            moves.append([self.coordinates[0] + y_offset + y_base, self.coordinates[1] + x_offset + x_base])
+            return
+        else:
+            return
+
+        if recursive:
+            self.add_direction(moves, x_offset, y_offset, True, x_base + x_offset, y_base + y_offset)
 
     def check_in_bounds(self, x_offset, y_offset):
         if not ((self.coordinates[0] + y_offset <= 7) and (self.coordinates[0] + y_offset >= 0)):
@@ -98,6 +106,11 @@ class King(Piece):
 class Bishop(Piece):
     def show_moves(self):
         moves = []
+
+        self.add_direction(moves, 1, 1, True)
+        self.add_direction(moves, -1, 1, True)
+        self.add_direction(moves, -1, -1, True)
+        self.add_direction(moves, 1, -1, True)
 
         return moves
     
