@@ -87,3 +87,55 @@ class Knight(Piece):
             print('♘', end=" ")
         else:
             print('♞', end=" ")
+
+
+class King(Piece):
+    def show_moves(self):
+        moves = []
+
+        return moves
+
+    def print_piece(self):
+        if self.color == "black":
+            print("♔", end=" ")
+        else:
+            print("♚", end=" ")
+
+
+class Bishop(Piece):
+    def show_moves(self):
+        moves = []
+
+        return moves
+    
+    def print_piece(self):
+        if self.color == "black":
+            print("♗", end=" ")
+        else:
+            print("♝", end=" ")
+
+
+class Rook(Piece):
+    def show_moves(self):
+        moves = []
+
+        return moves
+    
+    def print_piece(self):
+        if self.color == "black":
+            print("♖", end=" ")
+        else:
+            print("♜", end=" ")
+
+
+class Queen(Bishop, Rook):
+    def show_moves(self):
+        moves = []
+
+        return moves
+    
+    def print_piece(self):
+        if self.color == "black":
+            print("♕", end=" ")
+        else:
+            print("♛", end=" ")
