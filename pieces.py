@@ -37,7 +37,7 @@ class Pawn(Piece):
         increment = 1 if self.color == 'black' else -1
 
         #Check in bounds
-        if not (self.coordinates[0] + increment <= 7) and (self.coordinates[0] + increment >= 0):
+        if not (self.check_in_bounds(0, increment)):
             return moves
 
         #Check in front

@@ -37,14 +37,14 @@ class Game():
 
 def test():
     game = Game()
-    game.board[7][0].piece = Pawn([7, 0], 'black', game.board)
+    game.board[0][0].piece = Pawn([0, 0], 'black', game.board)
     game.board[5][6].piece = Pawn([5, 6], 'black', game.board)
 
     game.board[3][4].piece = Knight([3, 4], 'black', game.board)
 
     game.board[1][0].piece = None
     game.board[1][3].piece = None
-    print(game.board[3][4].piece.show_moves())
+    print(game.board[0][0].piece.show_moves())
     #game.move_piece([3, 4], [5, 5])
 
     game.print_board()
