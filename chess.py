@@ -42,7 +42,9 @@ def test():
 
     game.board[3][4].piece = Knight([3, 4], 'black', game.board)
 
-    print(game.board[6][4].piece.get_dangerous_squares())
+    game.board[1][0].piece = None
+    print(game.board[3][4].piece.show_moves())
+    game.move_piece([3, 4], [5, 5])
 
     game.print_board()
 

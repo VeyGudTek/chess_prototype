@@ -15,33 +15,7 @@ class Piece():
         self.color = color
         self.board = board
 
-    def get_dangerous_squares(self):
-        dangerous_squares = set()
-
-        for row in self.board:
-            for square in row:
-                if square.piece and square.piece.color != self.color:
-                    dangerous_squares = dangerous_squares.union(set([tuple(coordinate) for coordinate in square.piece.show_attack()]))
-        
-        return dangerous_squares
-
 class Pawn(Piece):
-    def show_attack(self):
-        moves = []
-        increment = 1 if self.color == 'black' else -1
-
-        #Check in bounds
-        if not (self.coordinates[0] + increment <= 7) and (self.coordinates[0] + increment >= 0):
-            return moves
-
-        #Check Diagonal
-        if (self.coordinates[1] + 1 <= 7):
-            moves.append([self.coordinates[0] + increment, self.coordinates[1] + 1])
-        if (self.coordinates[1] - 1 >= 0):
-            moves.append([self.coordinates[0] + increment, self.coordinates[1] - 1])
-
-        return moves
-
     def show_moves(self):
         moves = []
         increment = 1 if self.color == 'black' else -1
@@ -55,9 +29,9 @@ class Pawn(Piece):
             moves.append([self.coordinates[0] + increment, self.coordinates[1]])
         
         #Check Diagonal
-        if (self.coordinates[1] + 1 <= 7) and (self.board[self.coordinates[0] + increment][self.coordinates[1] + 1].piece) and (self.board[self.coordinates[0] + increment][self.coordinates[1] + 1].piece.color != self.color):
+        if self.board[self.coordinates[0] + increment][self.coordinates[1] + 1].piece and self.board[self.coordinates[0] + increment][self.coordinates[1] + 1].piece.color != self.color:
             moves.append([self.coordinates[0] + increment, self.coordinates[1] + 1])
-        if (self.coordinates[1] - 1 >= 0) and (self.board[self.coordinates[0] + increment][self.coordinates[1] - 1].piece) and (self.board[self.coordinates[0] + increment][self.coordinates[1] - 1].piece.color != self.color):
+        if self.board[self.coordinates[0] + increment][self.coordinates[1] - 1].piece and self.board[self.coordinates[0] + increment][self.coordinates[1] - 1].piece.color != self.color:
             moves.append([self.coordinates[0] + increment, self.coordinates[1] - 1])
         
         return moves
@@ -92,33 +66,12 @@ class Knight(Piece):
             moves.append([self.coordinates[0] - 1, self.coordinates[1] + 2])
 
         return moves
-    
-    def show_attack(self):
-        moves = []
-
-        #Check L movement
-        if self.check_in_bounds(1, 2):
-            moves.append([self.coordinates[0] + 2, self.coordinates[1] + 1])
-        if self.check_in_bounds(2, 1):
-            moves.append([self.coordinates[0] + 1, self.coordinates[1] + 2])
-        if self.check_in_bounds(-1, 2):
-            moves.append([self.coordinates[0] + 2, self.coordinates[1] - 1])
-        if self.check_in_bounds(-2, 1):
-            moves.append([self.coordinates[0] + 1, self.coordinates[1] - 2])
-        if self.check_in_bounds(-1, -2):
-            moves.append([self.coordinates[0] - 2, self.coordinates[1] - 1])
-        if self.check_in_bounds(-2, -1):
-            moves.append([self.coordinates[0] - 1, self.coordinates[1] - 2])
-        if self.check_in_bounds(1, -2):
-            moves.append([self.coordinates[0] - 2, self.coordinates[1] + 1])
-        if self.check_in_bounds(2, -1):
-            moves.append([self.coordinates[0] - 1, self.coordinates[1] + 2])
-
-        return moves
 
     def check_valid(self, x_offset, y_offset):
         #Check in bounds
-        if not self.check_in_bounds(x_offset, y_offset):
+        if not ((self.coordinates[0] + y_offset <= 7) and (self.coordinates[0] + y_offset >= 0)):
+            return False
+        if not ((self.coordinates[1] + x_offset <= 7) and (self.coordinates[1] + x_offset >= 0)):
             return False
 
         #Check for same colored pieces
@@ -129,23 +82,8 @@ class Knight(Piece):
         else:
             return False
 
-    def check_in_bounds(self, x_offset, y_offset):
-        if not ((self.coordinates[0] + y_offset <= 7) and (self.coordinates[0] + y_offset >= 0)):
-            return False
-        if not ((self.coordinates[1] + x_offset <= 7) and (self.coordinates[1] + x_offset >= 0)):
-            return False
-        return True
-
     def print_piece(self):
         if self.color == "black":
             print('♘', end=" ")
         else:
             print('♞', end=" ")
-
-
-class King(Piece):
-    def print_piece(self):
-        if self.color == 'black':
-            print('♔', end=" ")
-        else:
-            print('♚', end=" ")
