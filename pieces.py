@@ -125,6 +125,11 @@ class Rook(Piece):
     def show_moves(self):
         moves = []
 
+        self.add_direction(moves, 0, 1, True)
+        self.add_direction(moves, 1, 0, True)
+        self.add_direction(moves, 0, -1, True)
+        self.add_direction(moves, -1, 0, True)
+
         return moves
     
     def print_piece(self):
