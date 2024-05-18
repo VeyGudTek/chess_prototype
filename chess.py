@@ -3,6 +3,7 @@ from pieces import Pawn, Knight, Bishop, Rook, King, Queen, Square
 class Game():
     def __init__(self):
         self.board = self.create_board()
+        self.turn = 'white'
         self.x_conversion = {'a': 0, 'b': 1, 'c': 2, 'd': 3, 'e': 4, 'f': 5, 'g': 6, 'h': 7}
 
     def print_board(self):
@@ -47,17 +48,28 @@ class Game():
 
         return new_board
 
-    def move_piece(self, old_coord, new_coord, color):
+    def move_piece(self, user_input):
+        old_coord, new_coord = self.convert_input(user_input)
+        if not old_coord:
+            print('Invalid Input')
+            return False
+
         selected_piece = self.board[old_coord[0]][old_coord[1]].piece
 
-        if (not selected_piece) or (selected_piece.color != color):
-            print("No valid piece selected.")
+        if (not selected_piece) or (selected_piece.color != self.turn):
+            print("Not a valid.")
             return False
         elif new_coord in selected_piece.show_moves():
-            print("ogey")
+            print("Ogey")
             self.board[old_coord[0]][old_coord[1]].piece = None
             self.board[new_coord[0]][new_coord[1]].piece = selected_piece
-            #Move this to Piece Class, make sure to set Objects local coordinates
+            selected_piece.coordinates = [new_coord[0], new_coord[1]]
+
+            if self.turn == "black":
+                self.turn = "white"
+            else:
+                self.turn = "black"
+            
             return True
         else:
             print("Not a valid move.")
@@ -67,27 +79,28 @@ class Game():
         user_input = user_input.strip().split()
         #Check format and type
         if len(user_input) != 2:
-            return False
+            return False, ''
         
         input_1 = user_input[0]
         input_2 = user_input[1]
 
         if len(input_1) != 2 or not (input_1[0].isalpha()) or not(input_1[1].isdigit()):
-            return False
+            return False, ''
         if len(input_2) != 2 or not (input_2[0].isalpha()) or not(input_2[1].isdigit()):
-            return False
+            return False, ''
 
         #Check Range of Input
         if (not input_1[0] in self.x_conversion) or (not input_2[0] in self.x_conversion):
-            return False
+            return False, ''
         if (not int(input_1[1]) in range(1, 9)) or (not int(input_2[1]) in range(1, 9)):
-            return False
+            return False, ''
 
         return [8 - int(input_1[1]), self.x_conversion[input_1[0]]], [8 - int(input_2[1]), self.x_conversion[input_2[0]]]
 
+'''
 def test():
     game = Game()
-    '''
+
     game.board[0][0].piece = Pawn([0, 0], 'black', game.board)
     game.board[5][6].piece = Pawn([5, 6], 'black', game.board)
 
@@ -101,8 +114,8 @@ def test():
     game.board[1][3].piece = None
     print(game.board[3][4].piece.show_moves())
     game.move_piece([3, 5], [3, 5], 'black')
-    '''
     game.print_board()
     #print(game.convert_input(input()))
 
 test()
+'''
