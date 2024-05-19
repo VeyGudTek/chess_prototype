@@ -22,9 +22,9 @@ class Piece():
 
         #Check for same colored pieces
         if not self.board[self.coordinates[0] + y_offset + y_base][self.coordinates[1] + x_offset + x_base].piece:
-            moves.append([self.coordinates[0] + y_offset + y_base, self.coordinates[1] + x_offset + x_base])
+            moves.append((self.coordinates[0] + y_offset + y_base, self.coordinates[1] + x_offset + x_base))
         elif self.board[self.coordinates[0] + y_offset + y_base][self.coordinates[1] + x_offset + x_base].piece.color != self.color:
-            moves.append([self.coordinates[0] + y_offset + y_base, self.coordinates[1] + x_offset + x_base])
+            moves.append((self.coordinates[0] + y_offset + y_base, self.coordinates[1] + x_offset + x_base))
             return
         else:
             return
@@ -50,13 +50,13 @@ class Pawn(Piece):
 
         #Check in front
         if not self.board[self.coordinates[0] + increment][self.coordinates[1]].piece:
-            moves.append([self.coordinates[0] + increment, self.coordinates[1]])
+            moves.append((self.coordinates[0] + increment, self.coordinates[1]))
         
         #Check Diagonal
         if (self.check_in_bounds(1, increment)) and (self.board[self.coordinates[0] + increment][self.coordinates[1] + 1].piece) and (self.board[self.coordinates[0] + increment][self.coordinates[1] + 1].piece.color != self.color):
-            moves.append([self.coordinates[0] + increment, self.coordinates[1] + 1])
+            moves.append((self.coordinates[0] + increment, self.coordinates[1] + 1))
         if (self.check_in_bounds(-1, increment)) and (self.board[self.coordinates[0] + increment][self.coordinates[1] - 1].piece) and (self.board[self.coordinates[0] + increment][self.coordinates[1] - 1].piece.color != self.color):
-            moves.append([self.coordinates[0] + increment, self.coordinates[1] - 1])
+            moves.append((self.coordinates[0] + increment, self.coordinates[1] - 1))
         
         return moves
 

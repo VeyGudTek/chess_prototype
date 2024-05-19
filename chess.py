@@ -19,32 +19,32 @@ class Game():
 
         #Pawns
         for i in range(8):
-            new_board[1][i].piece = Pawn([1, i], 'black', new_board)
-            new_board[6][i].piece = Pawn([6, i], 'white', new_board)
+            new_board[1][i].piece = Pawn((1, i), 'black', new_board)
+            new_board[6][i].piece = Pawn((6, i), 'white', new_board)
 
         #Rooks
-        new_board[0][0].piece = Rook([0, 0], 'black', new_board)
-        new_board[0][7].piece = Rook([0, 7], 'black', new_board)
-        new_board[7][0].piece = Rook([7, 0], 'white', new_board)
-        new_board[7][7].piece = Rook([7, 7], 'white', new_board)
+        new_board[0][0].piece = Rook((0, 0), 'black', new_board)
+        new_board[0][7].piece = Rook((0, 7), 'black', new_board)
+        new_board[7][0].piece = Rook((7, 0), 'white', new_board)
+        new_board[7][7].piece = Rook((7, 7), 'white', new_board)
 
         #Knights
-        new_board[0][1].piece = Knight([0, 1], 'black', new_board)
-        new_board[0][6].piece = Knight([0, 6], 'black', new_board)
-        new_board[7][1].piece = Knight([7, 1], 'white', new_board)
-        new_board[7][6].piece = Knight([7, 6], 'white', new_board)
+        new_board[0][1].piece = Knight((0, 1), 'black', new_board)
+        new_board[0][6].piece = Knight((0, 6), 'black', new_board)
+        new_board[7][1].piece = Knight((7, 1), 'white', new_board)
+        new_board[7][6].piece = Knight((7, 6), 'white', new_board)
 
         #Bishops
-        new_board[0][2].piece = Bishop([0, 2], 'black', new_board)
-        new_board[0][5].piece = Bishop([0, 5], 'black', new_board)
-        new_board[7][2].piece = Bishop([7, 2], 'white', new_board)
-        new_board[7][5].piece = Bishop([7, 5], 'white', new_board)
+        new_board[0][2].piece = Bishop((0, 2), 'black', new_board)
+        new_board[0][5].piece = Bishop((0, 5), 'black', new_board)
+        new_board[7][2].piece = Bishop((7, 2), 'white', new_board)
+        new_board[7][5].piece = Bishop((7, 5), 'white', new_board)
 
         #Kings and Queens
-        new_board[0][4].piece = King([0, 4], 'black', new_board)
-        new_board[0][3].piece = Queen([0, 3], 'black', new_board)
-        new_board[7][4].piece = King([7, 4], 'white', new_board)
-        new_board[7][3].piece = Queen([7, 3], 'white', new_board)
+        new_board[0][4].piece = King((0, 4), 'black', new_board)
+        new_board[0][3].piece = Queen((0, 3), 'black', new_board)
+        new_board[7][4].piece = King((7, 4), 'white', new_board)
+        new_board[7][3].piece = Queen((7, 3), 'white', new_board)
 
         return new_board
 
@@ -95,27 +95,26 @@ class Game():
         if (not int(input_1[1]) in range(1, 9)) or (not int(input_2[1]) in range(1, 9)):
             return False, ''
 
-        return [8 - int(input_1[1]), self.x_conversion[input_1[0]]], [8 - int(input_2[1]), self.x_conversion[input_2[0]]]
+        return (8 - int(input_1[1]), self.x_conversion[input_1[0]]), (8 - int(input_2[1]), self.x_conversion[input_2[0]])
 
-'''
+
 def test():
     game = Game()
 
-    game.board[0][0].piece = Pawn([0, 0], 'black', game.board)
-    game.board[5][6].piece = Pawn([5, 6], 'black', game.board)
+    game.board[0][0].piece = Pawn((0, 0), 'black', game.board)
+    game.board[5][6].piece = Pawn((5, 6), 'black', game.board)
 
-    game.board[3][4].piece = Knight([3, 4], 'black', game.board)
-    game.board[4][3].piece = Bishop([4, 3], 'white', game.board)
-    game.board[5][4].piece = Rook([5, 4], 'white', game.board)
-    game.board[3][3].piece = King([3, 3], 'white', game.board)
-    game.board[3][6].piece = Queen([3, 6], 'white', game.board)
-
+    game.board[3][4].piece = Knight((3, 4), 'black', game.board)
+    game.board[4][3].piece = Bishop((4, 3), 'white', game.board)
+    game.board[5][4].piece = Rook((5, 4), 'white', game.board)
+    game.board[3][3].piece = King((3, 3), 'white', game.board)
+    game.board[3][6].piece = Queen((3, 6), 'white', game.board)
     game.board[1][0].piece = None
     game.board[1][3].piece = None
-    print(game.board[3][4].piece.show_moves())
-    game.move_piece([3, 5], [3, 5], 'black')
+    print(game.board[7][1].piece.show_moves())
+    print(game.convert_input('b1 a3'))
     game.print_board()
     #print(game.convert_input(input()))
 
 test()
-'''
+
