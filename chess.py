@@ -2,6 +2,8 @@ from pieces import Pawn, Knight, Bishop, Rook, King, Queen, Square
 
 class Game():
     def __init__(self):
+        self.white_king = None
+        self.black_king = None
         self.board = self.create_board()
         self.turn = 'white'
         self.x_conversion = {'a': 0, 'b': 1, 'c': 2, 'd': 3, 'e': 4, 'f': 5, 'g': 6, 'h': 7}
@@ -16,6 +18,15 @@ class Game():
 
     def create_board(self):
         new_board = [[Square('■') if (i + j) % 2 == 0 else Square('□')  for j in range(8)] for i in range(8)]
+
+        #Kings and Queens
+        new_board[0][4].piece = King((0, 4), 'black', new_board)
+        new_board[0][3].piece = Queen((0, 3), 'black', new_board)
+        new_board[7][4].piece = King((7, 4), 'white', new_board)
+        new_board[7][3].piece = Queen((7, 3), 'white', new_board)
+
+        self.white_king = new_board[7][4].piece
+        self.black_king = new_board[0][4].piece
 
         #Pawns
         for i in range(8):
@@ -39,12 +50,6 @@ class Game():
         new_board[0][5].piece = Bishop((0, 5), 'black', new_board)
         new_board[7][2].piece = Bishop((7, 2), 'white', new_board)
         new_board[7][5].piece = Bishop((7, 5), 'white', new_board)
-
-        #Kings and Queens
-        new_board[0][4].piece = King((0, 4), 'black', new_board)
-        new_board[0][3].piece = Queen((0, 3), 'black', new_board)
-        new_board[7][4].piece = King((7, 4), 'white', new_board)
-        new_board[7][3].piece = Queen((7, 3), 'white', new_board)
 
         return new_board
 
@@ -100,3 +105,17 @@ class Game():
             return False, ''
 
         return (8 - int(input_1[1]), self.x_conversion[input_1[0]]), (8 - int(input_2[1]), self.x_conversion[input_2[0]])
+    
+    def check_check(self):
+        dangerous_squares = set()
+        for row in self.board:
+            for square in row:
+                if square.piece and square.piece.color != self.turn:
+                    dangerous_squares = dangerous_squares.union(set(square.piece.show_moves()))
+
+        if self.turn == 'black' and self.black_king.coordinates in dangerous_squares:
+            return True
+        if self.turn == 'white' and self.white_king.coordinates in dangerous_squares:
+            return True
+        return False
+
