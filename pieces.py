@@ -40,6 +40,10 @@ class Piece():
         return True
 
 class Pawn(Piece):
+    def __init__(self, coordinates, color, board):
+        super().__init__(coordinates, color, board)
+        self.start = True
+
     def show_moves(self):
         moves = []
         increment = 1 if self.color == 'black' else -1
@@ -51,6 +55,10 @@ class Pawn(Piece):
         #Check in front
         if not self.board[self.coordinates[0] + increment][self.coordinates[1]].piece:
             moves.append((self.coordinates[0] + increment, self.coordinates[1]))
+
+        #Check long start
+        if (self.start) and (self.check_in_bounds(0, increment * 2)) and (not self.board[self.coordinates[0] + increment * 2][self.coordinates[1]].piece):
+            moves.append((self.coordinates[0] + increment * 2, self.coordinates[1]))
         
         #Check Diagonal
         if (self.check_in_bounds(1, increment)) and (self.board[self.coordinates[0] + increment][self.coordinates[1] + 1].piece) and (self.board[self.coordinates[0] + increment][self.coordinates[1] + 1].piece.color != self.color):

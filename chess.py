@@ -61,10 +61,14 @@ class Game():
             return False
         elif new_coord in selected_piece.show_moves():
             print("Ogey")
+            #Move and Update Piece
             self.board[old_coord[0]][old_coord[1]].piece = None
             self.board[new_coord[0]][new_coord[1]].piece = selected_piece
-            selected_piece.coordinates = [new_coord[0], new_coord[1]]
+            selected_piece.coordinates = (new_coord[0], new_coord[1])
+            if isinstance(selected_piece, Pawn):
+                selected_piece.start = False
 
+            #Update Turn
             if self.turn == "black":
                 self.turn = "white"
             else:
