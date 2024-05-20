@@ -1,3 +1,5 @@
+import copy
+
 class Square():
     def __init__(self, color):
         self.piece = None
@@ -14,6 +16,26 @@ class Piece():
         self.coordinates = coordinates
         self.color = color
         self.game = game
+
+    def check_fork(self, moves):
+        valid_moves = []
+        original_board = copy.deepcopy(self.game.board)
+        original_coordinates = self.coordinates
+
+        for move in moves:
+            #Make the move
+            self.game.board[original_coordinates[0]][original_coordinates[1]].piece = None
+            self.game.board[move[0]][move[1]].piece = self
+            self.coordinates = move
+
+            if not self.game.check_check():
+                valid_moves.append(move)
+
+            #Revert Board
+            self.game.board = copy.deepcopy(original_board)
+            self.coordinates = original_coordinates
+        
+        return valid_moves
 
     def add_direction(self, moves, x_offset, y_offset, recursive = False, x_base = 0, y_base = 0):
         #Check in bounds
