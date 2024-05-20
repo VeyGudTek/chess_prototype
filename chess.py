@@ -20,36 +20,36 @@ class Game():
         new_board = [[Square('■') if (i + j) % 2 == 0 else Square('□')  for j in range(8)] for i in range(8)]
 
         #Kings and Queens
-        new_board[0][4].piece = King((0, 4), 'black', new_board)
-        new_board[0][3].piece = Queen((0, 3), 'black', new_board)
-        new_board[7][4].piece = King((7, 4), 'white', new_board)
-        new_board[7][3].piece = Queen((7, 3), 'white', new_board)
+        new_board[0][4].piece = King((0, 4), 'black', self)
+        new_board[0][3].piece = Queen((0, 3), 'black', self)
+        new_board[7][4].piece = King((7, 4), 'white', self)
+        new_board[7][3].piece = Queen((7, 3), 'white', self)
 
         self.white_king = new_board[7][4].piece
         self.black_king = new_board[0][4].piece
 
         #Pawns
         for i in range(8):
-            new_board[1][i].piece = Pawn((1, i), 'black', new_board)
-            new_board[6][i].piece = Pawn((6, i), 'white', new_board)
+            new_board[1][i].piece = Pawn((1, i), 'black', self)
+            new_board[6][i].piece = Pawn((6, i), 'white', self)
 
         #Rooks
-        new_board[0][0].piece = Rook((0, 0), 'black', new_board)
-        new_board[0][7].piece = Rook((0, 7), 'black', new_board)
-        new_board[7][0].piece = Rook((7, 0), 'white', new_board)
-        new_board[7][7].piece = Rook((7, 7), 'white', new_board)
+        new_board[0][0].piece = Rook((0, 0), 'black', self)
+        new_board[0][7].piece = Rook((0, 7), 'black', self)
+        new_board[7][0].piece = Rook((7, 0), 'white', self)
+        new_board[7][7].piece = Rook((7, 7), 'white', self)
 
         #Knights
-        new_board[0][1].piece = Knight((0, 1), 'black', new_board)
-        new_board[0][6].piece = Knight((0, 6), 'black', new_board)
-        new_board[7][1].piece = Knight((7, 1), 'white', new_board)
-        new_board[7][6].piece = Knight((7, 6), 'white', new_board)
+        new_board[0][1].piece = Knight((0, 1), 'black', self)
+        new_board[0][6].piece = Knight((0, 6), 'black', self)
+        new_board[7][1].piece = Knight((7, 1), 'white', self)
+        new_board[7][6].piece = Knight((7, 6), 'white', self)
 
         #Bishops
-        new_board[0][2].piece = Bishop((0, 2), 'black', new_board)
-        new_board[0][5].piece = Bishop((0, 5), 'black', new_board)
-        new_board[7][2].piece = Bishop((7, 2), 'white', new_board)
-        new_board[7][5].piece = Bishop((7, 5), 'white', new_board)
+        new_board[0][2].piece = Bishop((0, 2), 'black', self)
+        new_board[0][5].piece = Bishop((0, 5), 'black', self)
+        new_board[7][2].piece = Bishop((7, 2), 'white', self)
+        new_board[7][5].piece = Bishop((7, 5), 'white', self)
 
         return new_board
 

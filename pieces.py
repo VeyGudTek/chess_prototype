@@ -10,10 +10,10 @@ class Square():
             print(self.color, end=' ')
 
 class Piece():
-    def __init__(self, coordinates, color, board):
+    def __init__(self, coordinates, color, game):
         self.coordinates = coordinates
         self.color = color
-        self.board = board
+        self.game = game
 
     def add_direction(self, moves, x_offset, y_offset, recursive = False, x_base = 0, y_base = 0):
         #Check in bounds
@@ -21,9 +21,9 @@ class Piece():
             return
 
         #Check for same colored pieces
-        if not self.board[self.coordinates[0] + y_offset + y_base][self.coordinates[1] + x_offset + x_base].piece:
+        if not self.game.board[self.coordinates[0] + y_offset + y_base][self.coordinates[1] + x_offset + x_base].piece:
             moves.append((self.coordinates[0] + y_offset + y_base, self.coordinates[1] + x_offset + x_base))
-        elif self.board[self.coordinates[0] + y_offset + y_base][self.coordinates[1] + x_offset + x_base].piece.color != self.color:
+        elif self.game.board[self.coordinates[0] + y_offset + y_base][self.coordinates[1] + x_offset + x_base].piece.color != self.color:
             moves.append((self.coordinates[0] + y_offset + y_base, self.coordinates[1] + x_offset + x_base))
             return
         else:
@@ -40,8 +40,8 @@ class Piece():
         return True
 
 class Pawn(Piece):
-    def __init__(self, coordinates, color, board):
-        super().__init__(coordinates, color, board)
+    def __init__(self, coordinates, color, game):
+        super().__init__(coordinates, color, game)
         self.start = True
 
     def show_moves(self):
@@ -53,17 +53,17 @@ class Pawn(Piece):
             return moves
 
         #Check in front
-        if not self.board[self.coordinates[0] + increment][self.coordinates[1]].piece:
+        if not self.game.board[self.coordinates[0] + increment][self.coordinates[1]].piece:
             moves.append((self.coordinates[0] + increment, self.coordinates[1]))
 
         #Check long start
-        if (self.start) and (self.check_in_bounds(0, increment * 2)) and (not self.board[self.coordinates[0] + increment * 2][self.coordinates[1]].piece):
+        if (self.start) and (self.check_in_bounds(0, increment * 2)) and (not self.game.board[self.coordinates[0] + increment * 2][self.coordinates[1]].piece):
             moves.append((self.coordinates[0] + increment * 2, self.coordinates[1]))
         
         #Check Diagonal
-        if (self.check_in_bounds(1, increment)) and (self.board[self.coordinates[0] + increment][self.coordinates[1] + 1].piece) and (self.board[self.coordinates[0] + increment][self.coordinates[1] + 1].piece.color != self.color):
+        if (self.check_in_bounds(1, increment)) and (self.game.board[self.coordinates[0] + increment][self.coordinates[1] + 1].piece) and (self.game.board[self.coordinates[0] + increment][self.coordinates[1] + 1].piece.color != self.color):
             moves.append((self.coordinates[0] + increment, self.coordinates[1] + 1))
-        if (self.check_in_bounds(-1, increment)) and (self.board[self.coordinates[0] + increment][self.coordinates[1] - 1].piece) and (self.board[self.coordinates[0] + increment][self.coordinates[1] - 1].piece.color != self.color):
+        if (self.check_in_bounds(-1, increment)) and (self.game.board[self.coordinates[0] + increment][self.coordinates[1] - 1].piece) and (self.game.board[self.coordinates[0] + increment][self.coordinates[1] - 1].piece.color != self.color):
             moves.append((self.coordinates[0] + increment, self.coordinates[1] - 1))
         
         return moves
@@ -156,7 +156,7 @@ class Rook(Piece):
             print("♜", end=" ")
 
 
-class Queen(Bishop, Rook):
+class Queen(Piece):
     def show_moves(self):
         moves = []
 
