@@ -16,8 +16,14 @@ game.turn = 'white'
 print(game.check_check())
 print('kings moves:')
 print(game.white_king.show_moves())
-print(game.white_king.check_fork(game.white_king.show_moves()))
+print(game.white_king.show_moves(True))
 print('knight moves:')
 print(game.board[2][3].piece.show_moves())
-print(game.board[2][3].piece.check_fork(game.board[2][3].piece.show_moves()))
-#print(game.convert_input(input()))
+print(game.board[2][3].piece.show_moves(True))
+print(game.board[7][6].piece.show_moves(True))
+game.print_board()
+
+
+
+print(game.move_piece(input("move: ")))
+

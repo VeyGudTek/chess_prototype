@@ -62,9 +62,9 @@ class Game():
         selected_piece = self.board[old_coord[0]][old_coord[1]].piece
 
         if (not selected_piece) or (selected_piece.color != self.turn):
-            print("Not a valid.")
+            print("Not a valid move.")
             return False
-        elif new_coord in selected_piece.show_moves():
+        elif new_coord in selected_piece.show_moves(True):
             print("Ogey")
             #Move and Update Piece
             self.board[old_coord[0]][old_coord[1]].piece = None
