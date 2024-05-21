@@ -106,16 +106,33 @@ class Game():
 
         return (8 - int(input_1[1]), self.x_conversion[input_1[0]]), (8 - int(input_2[1]), self.x_conversion[input_2[0]])
     
-    def check_check(self):
+    def get_dangerous_squares(self, color, check_next=False):
         dangerous_squares = set()
         for row in self.board:
             for square in row:
-                if square.piece and square.piece.color != self.turn:
-                    dangerous_squares = dangerous_squares.union(set(square.piece.show_moves()))
+                if square.piece and square.piece.color != color:
+                    dangerous_squares = dangerous_squares.union(set(square.piece.show_moves(check_next)))
+        return dangerous_squares
+
+    def check_check(self):
+        dangerous_squares = self.get_dangerous_squares(self.turn)
 
         if self.turn == 'black' and self.black_king.coordinates in dangerous_squares:
             return True
         if self.turn == 'white' and self.white_king.coordinates in dangerous_squares:
             return True
         return False
+
+    def check_state(self):
+        opp_turn = 'white'
+        if self.turn == 'white':
+            opp_turn = 'black'
+        
+        if self.check_check() and len(self.get_dangerous_squares(opp_turn, True)) == 0:
+            print('Checkmate')
+        elif self.check_check():
+            print('Check')
+        else:
+            print('Normal')
+
 
