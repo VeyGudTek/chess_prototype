@@ -22,6 +22,7 @@ class Piece():
         for move in moves:
             #Make the move
             self.game.board[original_coordinates[0]][original_coordinates[1]].piece = None
+            old_piece = self.game.board[move[0]][move[1]].piece
             self.game.board[move[0]][move[1]].piece = self
             self.coordinates = move
 
@@ -30,7 +31,7 @@ class Piece():
 
             #Revert Move
             self.game.board[original_coordinates[0]][original_coordinates[1]].piece = self
-            self.game.board[move[0]][move[1]].piece = None
+            self.game.board[move[0]][move[1]].piece = old_piece
             self.coordinates = original_coordinates
         
         return valid_moves
