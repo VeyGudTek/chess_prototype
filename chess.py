@@ -7,6 +7,7 @@ class Game():
         self.board = self.create_board()
         self.turn = 'white'
         self.x_conversion = {'a': 0, 'b': 1, 'c': 2, 'd': 3, 'e': 4, 'f': 5, 'g': 6, 'h': 7}
+        self.class_conversion = {'queen': Queen, 'rook': Rook, 'bishop': Bishop, 'knight': Knight}
 
     def print_board(self):
         for i in range(len(self.board)):
@@ -85,7 +86,7 @@ class Game():
             return False
 
     def convert_input(self, user_input):
-        user_input = user_input.strip().split()
+        user_input = user_input.strip().lower().split()
         #Check format and type
         if len(user_input) != 2:
             return False, ''
@@ -132,7 +133,33 @@ class Game():
             print('Checkmate')
         elif self.check_check():
             print('Check')
+        elif self.check_pawn():
+            print('Pawn reached end')
         else:
             print('Normal')
+    
+    def check_pawn(self):
+        pawn = None
+        for i in [0, 7]:
+            for square in self.board[i]:
+                if isinstance(square.piece, Pawn):
+                    pawn = square.piece
 
+        if not pawn:
+            return False
+        else:
+            return pawn
 
+    def convert_pawn(self, user_input):
+        pawn = self.check_pawn()
+        if not pawn:
+            print('No pawn to convert')
+            return False
+
+        user_input = user_input.strip().lower()
+        if not user_input in self.class_conversion:
+            print('None existent class')
+            return False
+        else:
+            self.board[pawn.coordinates[0]][pawn.coordinates[1]].piece = self.class_conversion[user_input]((pawn.coordinates), pawn.color, self)
+            print('converted Pawn')
