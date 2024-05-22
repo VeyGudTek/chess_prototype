@@ -11,6 +11,7 @@ game.board[4][0].piece = Queen((4, 0), 'black', game)
 game.board[7][3].piece = Pawn((7, 3), 'white', game)
 game.print_board()
 if game.check_pawn():
+    print('pawn needs to be converted')
     game.convert_pawn('biShop ')
 game.print_board()
 

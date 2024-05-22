@@ -8,6 +8,8 @@ class Game():
         self.turn = 'white'
         self.x_conversion = {'a': 0, 'b': 1, 'c': 2, 'd': 3, 'e': 4, 'f': 5, 'g': 6, 'h': 7}
         self.class_conversion = {'queen': Queen, 'rook': Rook, 'bishop': Bishop, 'knight': Knight}
+        self.response_code = {1: "Invalid Move Input", 2: "Invalid Piece Selection", 3: "Successful Move", 4: "Invalid Move", 5: "CheckMate",\
+             6: "Check", 7: "No Event" , 8: "Pawn Conversion", 9: "No Pawn to Convert", 10: "Not Valid Class", 11: "Pawn Converted"}
 
     def print_board(self):
         for i in range(len(self.board)):
@@ -57,16 +59,15 @@ class Game():
     def move_piece(self, user_input):
         old_coord, new_coord = self.convert_input(user_input)
         if not old_coord:
-            print('Invalid Input')
-            return False
+            #Invalid Input
+            return 1
 
         selected_piece = self.board[old_coord[0]][old_coord[1]].piece
 
         if (not selected_piece) or (selected_piece.color != self.turn):
-            print("Not a valid move.")
-            return False
+            #Invalid Piece Selection
+            return 2
         elif new_coord in selected_piece.show_moves(True):
-            print("Ogey")
             #Move and Update Piece
             self.board[old_coord[0]][old_coord[1]].piece = None
             self.board[new_coord[0]][new_coord[1]].piece = selected_piece
@@ -80,10 +81,10 @@ class Game():
             else:
                 self.turn = "black"
             
-            return True
+            return 3
         else:
-            print("Not a valid move.")
-            return False
+            #Invalid Move
+            return 4
 
     def convert_input(self, user_input):
         user_input = user_input.strip().lower().split()
@@ -130,13 +131,17 @@ class Game():
             opp_turn = 'black'
         
         if self.check_check() and len(self.get_dangerous_squares(opp_turn, True)) == 0:
-            print('Checkmate')
+            #Checkmate
+            return 5
         elif self.check_check():
-            print('Check')
+            #Check
+            return 6
         elif self.check_pawn():
-            print('Pawn reached end')
+            #Pawn Ready to Convert
+            return 7
         else:
-            print('Normal')
+            #No event
+            return 8
     
     def check_pawn(self):
         pawn = None
@@ -153,13 +158,14 @@ class Game():
     def convert_pawn(self, user_input):
         pawn = self.check_pawn()
         if not pawn:
-            print('No pawn to convert')
-            return False
+            #No Pawn to Convert
+            return 9
 
         user_input = user_input.strip().lower()
         if not user_input in self.class_conversion:
-            print('None existent class')
-            return False
+            #Not a valid Piece
+            return 10
         else:
+            #Pawn Converted
             self.board[pawn.coordinates[0]][pawn.coordinates[1]].piece = self.class_conversion[user_input]((pawn.coordinates), pawn.color, self)
-            print('converted Pawn')
+            return 11
