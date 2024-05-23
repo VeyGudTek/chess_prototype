@@ -10,6 +10,7 @@ class Session():
         self.game_start = asyncio.Event()
         self.player = 'white'
         self.prev_move = None
+        self.game_ended = False
 
     def set_player(self):
         if self.player == 'white':
@@ -66,12 +67,36 @@ async def new_client(reader, writer):
         writer.write(str(session.prev_move).encode())
         await writer.drain()
         print('sent prev move to', player_color)
+        #END GAME
+        if session.game_ended:
+            break
 
         #GET MOVE FROM CLIENT
         data = await reader.read(100)
         print('Received Move:', data.decode())
-        session.game.move_piece(data.decode())
+
+        #Get move loop
+        while data.decode() != 'quit' and data.decode():
+            match session.game.move_piece(data.decode()):
+                case 3:
+                    break
+                case _:
+                    writer.write('fail'.encode())
+                    await writer.drain()
+            data = await reader.read(100)
+            print('Received Move:', data.decode())
+
         session.prev_move = data.decode()
+
+        if session.game.check_state() == 5:
+            #Checkmate check
+            print('Game Ended from Checkmate')
+            session.game_ended = True
+        elif session.prev_move == 'quit' or not session.prev_move:
+            #Quit game check
+            print('Game Ended from Quit')
+            session.game_ended = True
+
         session.switch_turns()
 
     writer.close()

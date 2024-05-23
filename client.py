@@ -19,8 +19,21 @@ async def run():
         data = await reader.read(100)
         print('Received Move:', data.decode())
 
+        #Game End from Server
+        if data.decode() == 'quit' or not data.decode():
+            print('Connection Lost')
+            break
+
+        #Check State of Game
         game.move_piece(data.decode())
         game.print_board()
+        match game.check_state():
+            case 5:
+                print('CheckMate!')
+                print('You Lost')
+                break
+            case 6:
+                print('Check!')
 
         user_input = input('Move Piece: ').lower().strip()
 
@@ -40,11 +53,17 @@ async def run():
 
         game.print_board()
 
+        writer.write(user_input.encode())
+        await writer.drain()
+
         if user_input == 'quit':
             break    
 
-        writer.write(user_input.encode())
-        await writer.drain()
+        #Check for Win
+        if game.check_state() == 5:
+            print('CheckMate\n')
+            print('You Won!')
+            break
 
     writer.close()
     await writer.wait_closed()
