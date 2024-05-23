@@ -5,9 +5,10 @@ async def run():
 
     print('Created Connection')
 
-    message = input('Enter Message: ')
-    writer.write(message.encode())
-    await writer.drain()
+    print('Getting ID...')
+    data = await reader.read()
+    
+    print('You are player', data.decode())
 
     writer.close()
     await writer.wait_closed()
