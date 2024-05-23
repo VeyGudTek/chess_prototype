@@ -61,11 +61,13 @@ async def new_client(reader, writer):
     
     #Gameplay Loop
     while True:
+        #SEND MESSAGE TO CLIENT TO INITIATE TURN
         await wait_turn.wait()
         writer.write(str(session.prev_move).encode())
         await writer.drain()
         print('sent prev move to', player_color)
 
+        #GET MOVE FROM CLIENT
         data = await reader.read(100)
         print('Received Move:', data.decode())
         session.game.move_piece(data.decode())
