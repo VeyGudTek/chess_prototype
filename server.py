@@ -4,10 +4,12 @@ from chess import Game
 class Session():
     def __init__(self):
         self.game = Game()
-        self.turn_1 = asyncio.Event()
-        self.turn_1.set()
-        self.turn_2 = asyncio.Event()
+        self.turn_white = asyncio.Event()
+        self.turn_white.set()
+        self.turn_black = asyncio.Event()
+        self.game_start = asyncio.Event()
         self.player = 'white'
+        self.prev_move = None
 
     def set_player(self):
         if self.player == 'white':
@@ -19,9 +21,17 @@ class Session():
 
     def get_event(self, player_color):
         if player_color == 'white':
-            return self.turn_1
+            return self.turn_white
         else:
-            return self.turn_2
+            return self.turn_black
+
+    def switch_turns(self):
+        if self.turn_white.is_set():
+            self.turn_white.clear()
+            self.turn_black.set()
+        else:
+            self.turn_white.set()
+            self.turn_black.clear()
 
 waiting = None
 
@@ -43,6 +53,24 @@ async def new_client(reader, writer):
     #Reset waiting if you are second player
     if session.player == 'done':
         waiting = None
+        session.game_start.set()
+    
+    #Wait for game to start
+    await session.game_start.wait()
+    print('Game started')
+    
+    #Gameplay Loop
+    while True:
+        await wait_turn.wait()
+        writer.write(str(session.prev_move).encode())
+        await writer.drain()
+        print('sent prev move to', player_color)
+
+        data = await reader.read(100)
+        print('Received Move:', data.decode())
+        session.game.move_piece(data.decode())
+        session.prev_move = data.decode()
+        session.switch_turns()
 
     writer.close()
     await writer.wait_closed()
