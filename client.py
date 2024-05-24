@@ -15,6 +15,7 @@ async def run():
     game.print_board()
 
     while True:
+        #Turn is initiated with message from server
         print('Waiting for other player to move...')
         data = await reader.read(100)
         print('Received Move:', data.decode())
@@ -24,17 +25,30 @@ async def run():
             print('Connection Lost')
             break
 
-        #Check State of Game
         game.move_piece(data.decode())
-        game.print_board()
+        
+        #Check State of Game       
         match game.check_state():
             case 5:
+                #Checkmate
                 print('CheckMate!')
                 print('You Lost')
                 break
             case 6:
+                #Check
                 print('Check!')
+            case 7:
+                #Pawn Conversion
+                data = await reader.read(100)
+                print('Pawn Converted:', data.decode())
 
+                if data.decode() == 'quit' or not data.decode():
+                    print('Connection Lost')
+                    break
+                
+                game.convert_pawn(data.decode())
+
+        game.print_board()
         user_input = input('Move Piece: ').lower().strip()
 
         #Move Piece Loop
@@ -53,17 +67,39 @@ async def run():
 
         game.print_board()
 
+        #Send move to server
         writer.write(user_input.encode())
         await writer.drain()
 
         if user_input == 'quit':
             break    
 
-        #Check for Win
-        if game.check_state() == 5:
-            print('CheckMate\n')
-            print('You Won!')
-            break
+        #Check game state
+        match game.check_state():
+            case 7:
+                #Pawn Conversion Loop
+                user_input = input('Convert Pawn: ').lower().strip()
+
+                while user_input != 'quit':
+                    match game.convert_pawn(user_input):
+                        case 10:
+                            print('Please enter a valid Piece')
+                        case 11:
+                            print('Pawn Converted to', user_input.capitalize())
+                            break
+                    user_input = input('Convert Pawn: ').lower().strip()
+
+                #Send conversion to server
+                writer.write(user_input.encode())
+                await writer.drain()
+
+                if user_input == 'quit':
+                    break   
+            case 5: 
+                #Checkmate
+                print('CheckMate\n')
+                print('You Won!')
+                break
 
     writer.close()
     await writer.wait_closed()

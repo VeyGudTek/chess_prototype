@@ -11,6 +11,7 @@ class Session():
         self.player = 'white'
         self.prev_move = None
         self.game_ended = False
+        self.pawn_conversion = 'hold'
 
     def set_player(self):
         if self.player == 'white':
@@ -62,11 +63,19 @@ async def new_client(reader, writer):
     
     #Gameplay Loop
     while True:
-        #SEND MESSAGE TO CLIENT TO INITIATE TURN
+        #SEND MOVE TO CLIENT TO INITIATE TURN
         await wait_turn.wait()
         writer.write(str(session.prev_move).encode())
         await writer.drain()
         print('sent prev move to', player_color)
+
+        #IF A PAWN CONVERSION WAS MADE, SEND IT
+        if session.pawn_conversion != 'hold':
+            writer.write(str(session.pawn_conversion).encode())
+            await writer.drain()
+            session.pawn_conversion = 'hold'
+            print('sent pawn_conversion to', player_color)
+
         #END GAME
         if session.game_ended:
             break
@@ -81,12 +90,33 @@ async def new_client(reader, writer):
                 case 3:
                     break
                 case _:
-                    writer.write('fail'.encode())
+                    writer.write('fail_move'.encode())
                     await writer.drain()
             data = await reader.read(100)
             print('Received Move:', data.decode())
 
         session.prev_move = data.decode()
+
+        if session.game.check_state() == 7:
+            #Get Pawn Conversion Loop
+            data = await reader.read(100)
+            print('Received Pawn Conversion: ', data.decode())
+
+            while data.decode() != 'quit' and data.decode():
+                match session.game.convert_pawn(data.decode()):
+                    case 11:
+                        break
+                    case _:
+                        writer.write('fail_pawn'.encode())
+                        await writer.drain()
+                data = await reader.read(100)
+                print('Received Pawn Conversion: ', data.decode())
+            
+            session.pawn_conversion = data.decode()
+            if not data.decode() in session.game.class_conversion.keys():
+                #Quit Game Check
+                print('Game Ended from Quit')
+                session.game_ended = True
 
         if session.game.check_state() == 5:
             #Checkmate check
