@@ -16,7 +16,7 @@ async def run():
 
     while True:
         #Turn is initiated with message from server
-        print('Waiting for other player to move...')
+        print('Waiting for other player...')
         data = await reader.read(100)
         print('Received Move:', data.decode())
 
@@ -49,7 +49,7 @@ async def run():
                 game.convert_pawn(data.decode())
 
         game.print_board()
-        user_input = input('Move Piece: ').lower().strip()
+        user_input = input('Move Piece in format: [start coordinates] [end coordinates] (i.e "c4 c6")\nMove Piece: ').lower().strip()
 
         #Move Piece Loop
         while user_input != 'quit':
@@ -78,7 +78,7 @@ async def run():
         match game.check_state():
             case 7:
                 #Pawn Conversion Loop
-                user_input = input('Convert Pawn: ').lower().strip()
+                user_input = input('Convert Pawn(Options are [queen], [rook], [bishop], [knight]): ').lower().strip()
 
                 while user_input != 'quit':
                     match game.convert_pawn(user_input):
