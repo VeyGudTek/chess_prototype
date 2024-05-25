@@ -95,6 +95,8 @@ async def run():
 
                 if user_input == 'quit':
                     break   
+
+                game.print_board()
             case 5: 
                 #Checkmate
                 print('CheckMate\n')
