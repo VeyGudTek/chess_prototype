@@ -84,7 +84,7 @@ async def new_client(reader, writer):
         data = await reader.read(100)
         print('Received Move:', data.decode())
 
-        #Get move loop
+        '''Get move loop for error checking
         while data.decode() != 'quit' and data.decode():
             match session.game.move_piece(data.decode()):
                 case 3:
@@ -94,14 +94,24 @@ async def new_client(reader, writer):
                     await writer.drain()
             data = await reader.read(100)
             print('Received Move:', data.decode())
+        '''
+
+        #Move Piece without Error Checking
+        if session.game.move_piece(data.decode()) != 3:
+                #Quit Game Check
+                print('Game Ended from Quit')
+                session.game_ended = True
 
         session.prev_move = data.decode()
 
+        print(session.game.check_state())
+
         if session.game.check_state() == 7:
-            #Get Pawn Conversion Loop
+            #Get Pawn Conversion
             data = await reader.read(100)
             print('Received Pawn Conversion: ', data.decode())
-
+            
+            '''Loop for Error Checking
             while data.decode() != 'quit' and data.decode():
                 match session.game.convert_pawn(data.decode()):
                     case 11:
@@ -114,6 +124,13 @@ async def new_client(reader, writer):
             
             session.pawn_conversion = data.decode()
             if not data.decode() in session.game.class_conversion.keys():
+                #Quit Game Check
+                print('Game Ended from Quit')
+                session.game_ended = True
+            '''
+            
+            session.pawn_conversion = data.decode()
+            if session.game.convert_pawn(data.decode()) != 11:
                 #Quit Game Check
                 print('Game Ended from Quit')
                 session.game_ended = True
